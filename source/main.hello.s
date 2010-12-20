@@ -1,6 +1,10 @@
 	.cpu arm7tdmi
   .file "main.hello.s"
   .align 2
+  .data
+.LhelloStr:
+  .align 2
+  .asciz "Hello World!"
 	.text
 	.align	2
 	.global	main
@@ -14,11 +18,8 @@ main:
 .L2:
 	bl	swiWaitForVBlank
 	b	.L2
-.LhelloStr:
-  .ascii "Hello World!\000"
 .Lhello:
   .align 2
   .word .LhelloStr
-	.size	main, .-main
   .ident "RAM: 333 ARM"
 
