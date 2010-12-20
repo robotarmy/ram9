@@ -1,0 +1,123 @@
+
+                                                                        <div class="post_title">
+                                ARM7 Hello World Collection (in Progress)                            </div>
+                                
+                                            
+                        <p>Here are a collection of ways to implement hello world in arm7 assembler(GNU GAS)    This one uses the pseudo-instruction ‘adr’ to load the address of a label into r0 ADR is a short range instruction - the compiler will error if it cannot reach the instruction - it depends on the thumb version as to the pc (program counter) relative offset of the address.</p>
+<pre>  .cpu arm7tdmi
+  .text
+  .global	main
+  .type	main, %function
+  main:
+  bl	consoleDemoInit
+  adr r0, .LhelloStr
+  bl	printf
+  .L2:
+  bl	swiWaitForVBlank
+  b	.L2
+.LhelloStr:
+  .ascii "Hello World!\000\000"
+</pre>
+<p>This version turns the necessary padding into a .space directive</p>
+<pre>  .cpu arm7tdmi
+  .text
+  .global	main
+  .type	main, %function
+  main:
+  bl	consoleDemoInit
+  adr r0, .LhelloStr
+  bl	printf
+  .L2:
+  bl	swiWaitForVBlank
+  b	.L2
+.LhelloStr:
+  .ascii "Hello World!\000"
+  .space 1
+</pre>
+<p>In this example we switch to the .string directive to specify a null terminated string</p>
+<pre>  .cpu arm7tdmi
+  .text
+  .global	main
+  .type	main, %function
+  main:
+  bl	consoleDemoInit
+  adr r0, .LhelloStr
+  bl	printf
+  .L2:
+  bl	swiWaitForVBlank
+  b	.L2
+.LhelloStr:
+  .string "Hello World!"
+  .space 1
+</pre>
+<p>in this version we use .align directive  instead of space.   This ensures alignment to the next 2^1 byte  boundary</p>
+<pre>  .cpu arm7tdmi
+  .text
+  .global	main
+  .type	main, %function
+  main:
+  bl	consoleDemoInit
+  adr r0, .LhelloStr
+  bl	printf
+  .L2:
+  bl	swiWaitForVBlank
+  b	.L2
+.LhelloStr:
+  .string "Hello World!"
+  .align 1
+</pre>
+<p>This one uses ldr to insert a value at a label that signifies the address of another label.  In this example we only get success when we ensure that the alignment is on the 2^2 byte boundary. I am still trying to understand why.</p>
+<pre>  .cpu arm7tdmi
+  .text
+  .global	main
+  .type	main, %function
+  main:
+  bl	consoleDemoInit
+  ldr r0, .Lhello
+  bl	printf
+  .L2:
+  bl	swiWaitForVBlank
+  b	.L2
+.LhelloStr:
+  .string "Hello World!"
+  .align 2
+.Lhello:
+  .word .LhelloStr
+</pre>
+<p>This one puts the string into the ROM and loads via LDR</p>
+<pre>.cpu arm7tdmi
+  .section .rodata
+.LhelloStr:
+  .string "Hello World!"
+  .text
+  .global	main
+  .type	main, %function
+  main:
+  bl	consoleDemoInit
+  ldr r0, .Lhello
+  bl	printf
+  .L2:
+  bl	swiWaitForVBlank
+  b	.L2
+.Lhello:
+  .word .LhelloStr
+</pre>
+<p>This one stores the string in a data section and loads via LDR</p>
+<pre>.cpu arm7tdmi
+  .data
+.LhelloStr:
+  .string "Hello World!"
+  .text
+  .global	main
+  .type	main, %function
+  main:
+  bl	consoleDemoInit
+  ldr r0, .Lhello
+  bl	printf
+  .L2:
+  bl	swiWaitForVBlank
+  b	.L2
+.Lhello:
+  .word .LhelloStr
+</pre>                    
+
