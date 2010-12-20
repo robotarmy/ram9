@@ -4,9 +4,6 @@
   .align 2
 .SPC:
   .string " "
-.HELLO:
-	.ascii	"Hello\000"
-  .align 2
 .WORLD:
 	.ascii	"World!\000"
 	.text
@@ -26,6 +23,9 @@ main:
 .L2:
 	bl	swiWaitForVBlank
 	b	.L2
+.LhelloStr:
+  .align 2
+  .string "hello"
 .LSP:
   .align 2
   .word .SPC @memory address
@@ -34,7 +34,7 @@ main:
   .word .WORLD
 	.align	2
 .Lhello:
-	.word	.HELLO
+	.word	.LhelloStr
 	.size	main, .-main
   .ident "RAM: 333 ARM"
 
