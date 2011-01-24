@@ -20,7 +20,7 @@ main:
     @#262144         @ color to use 18bit max
     mov r6, #32             @ Color change delay
     mov r7, #262144         @ color to start with
-    mov r8, #0x200         @ number of pixels of the screen occupied by animation
+    mov r8, #0x1000         @ number of pixels of the screen occupied by animation
     mov r9, #0x08           @ color delta 
     mov r1, r7              @ Writing pixel
 
