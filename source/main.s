@@ -18,18 +18,21 @@ main:
     
 
     @#262144         @ color to use 18bit max
-
     mov r6, #64             @ Color change delay
     mov r7, #262144         @ color to start with
-    mov r8, #0x16000         @ number of pixels of the screen occupied by animation
+    mov r8, #0x8000         @ number of pixels of the screen occupied by animation
     mov r9, #0x08           @ color delta 
     mov r1, r7              @ Writing pixel
 event: mov r4, #256            @ number of frames
     mov r2, r8           @ number of pxels for lp loop
     mov r3, r6              @ r3 is how often to change color 
 nf:    
-    mov r0, #0x06800000      @ VRAM offset #reset each loop
-lp: strh r1, [r0], #1        @ Write r1 into in and increment r0 by 1
+    mov r0,  #0x06800000      @ VRAM offset #reset each loop
+    mov r10, #0x06800000      @ VRAM offset #reset each loop
+    add r10,r10,r9 
+lp: 
+    strh r1, [r10], #1        @ Write r1 into in and increment r0 by 1
+    strh r1, [r0], #1        @ Write r1 into in and increment r0 by 1
     subs r2, r2, #1        @ decrement number of pixels to write
     bne lp                   @ branch if not equal (is it checking the flags??)
     mov r2, r8              @ resest number of pixel counter
