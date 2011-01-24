@@ -15,12 +15,16 @@ main:
     str r1,[r0, #0x304]     @ Set POWERCNT  # couldn't find reference to this in gbatek
     str r2,[r0]             @     DISPCNT   #
     str r3,[r0, #0x240]     @     VRAMCNT_A #
+    
+
+    @#262144         @ color to use 18bit max
 
     mov r6, #64             @ Color change delay
-    mov r7, #262144         @ color to use 18bit max
-    mov r8, #0x16000         @ number of pixels
+    mov r7, #262144         @ color to start with
+    mov r8, #0x16000         @ number of pixels of the screen occupied by animation
+    mov r9, #0x08           @ color delta 
     mov r1, r7              @ Writing pixel
-r4: mov r4, #64             @ r4 is the amount we change colors by - invariant in nf loop
+event: mov r4, #256            @ number of frames
     mov r2, r8           @ number of pxels for lp loop
     mov r3, r6              @ r3 is how often to change color 
 nf:    
@@ -30,17 +34,19 @@ lp: strh r1, [r0], #1        @ Write r1 into in and increment r0 by 1
     bne lp                   @ branch if not equal (is it checking the flags??)
     mov r2, r8              @ resest number of pixel counter
 
+    @@ Delay r6 / r3
+    @@ Between color change
     subs r3,   r3, #4        @ if color change delay reaches zero then change color
     bne after
 next_color:
     mov r3, r6               @ reset the color change amount 
-    sub r7, r7, r3           @ modify color by color change amount
+    sub r7, r7, r9           @ modify color by color change amount
     mov r1, r7               @ set the color to be the new color
 after:
     subs r4, r4, #1          @ number of loops
     bne nf                   @ branch on zero back to r4
     
-    b r4
+    b event
 
 inf: b inf
 
