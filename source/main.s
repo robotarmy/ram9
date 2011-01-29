@@ -17,7 +17,7 @@ main:
     str r3,[r0, #0x240]     @     VRAMCNT_A #
     
     @ desmune lcd seems to be 512 pixels across (contrary to wiki specifying 256)
-    @#262144         @ color to use 18bit max
+    @#262144                @ color to use 18bit max
     mov r6, #32             @ Color change delay
     mov r7, #262144         @ color to start with
     mov r8, #0x1000         @ number of pixels of the screen occupied by animation
